@@ -455,7 +455,7 @@ function! fzf#vim#files(dir, ...)
     let dir = s:shortpath()
   endif
 
-  let args.options = ['-m', '--prompt', strwidth(dir) < &columns / 2 - 20 ? dir : '> ']
+  let args.options = ['-m', '--prompt', strwidth(dir) < &columns / 2 - 20 ? dir : '❯ ']
   call s:merge_opts(args, s:conf('files_options', []))
   return s:fzf('files', args, a:000)
 endfunction
@@ -530,7 +530,7 @@ function! fzf#vim#lines(...)
   return s:fzf('lines', {
   \ 'source':  lines,
   \ 'sink*':   s:function('s:line_handler'),
-  \ 'options': s:reverse_list(['--tiebreak=index', '--prompt', 'Lines> ', '--ansi', '--extended', '--nth='.nth.'..', '--tabstop=1', '--query', query, '--multi'])
+  \ 'options': s:reverse_list(['--tiebreak=index', '--prompt', 'Lines❯ ', '--ansi', '--extended', '--nth='.nth.'..', '--tabstop=1', '--query', query, '--multi'])
   \}, args)
 endfunction
 
@@ -571,7 +571,7 @@ function! fzf#vim#buffer_lines(...)
   return s:fzf('blines', {
   \ 'source':  s:buffer_lines(query),
   \ 'sink*':   s:function('s:buffer_line_handler'),
-  \ 'options': s:reverse_list(['+m', '--tiebreak=index', '--multi', '--prompt', 'BLines> ', '--ansi', '--extended', '--nth=2..', '--tabstop=1'])
+  \ 'options': s:reverse_list(['+m', '--tiebreak=index', '--multi', '--prompt', 'BLines❯ ', '--ansi', '--extended', '--nth=2..', '--tabstop=1'])
   \}, args)
 endfunction
 
@@ -586,7 +586,7 @@ function! fzf#vim#colors(...)
   return s:fzf('colors', {
   \ 'source':  fzf#vim#_uniq(map(colors, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")),
   \ 'sink':    'colo',
-  \ 'options': '+m --prompt="Colors> "'
+  \ 'options': '+m --prompt="Colors❯ "'
   \}, a:000)
 endfunction
 
@@ -596,7 +596,7 @@ endfunction
 function! fzf#vim#locate(query, ...)
   return s:fzf('locate', {
   \ 'source':  'locate '.a:query,
-  \ 'options': '-m --prompt "Locate> "'
+  \ 'options': '-m --prompt "Locate❯ "'
   \}, a:000)
 endfunction
 
@@ -655,7 +655,7 @@ function! fzf#vim#command_history(...)
   return s:fzf('history-command', {
   \ 'source':  s:history_source(':'),
   \ 'sink*':   s:function('s:cmd_history_sink'),
-  \ 'options': '+m --ansi --prompt="Hist:> " --header-lines=1 --expect=ctrl-e --tiebreak=index'}, a:000)
+  \ 'options': '+m --ansi --prompt="Hist:❯ " --header-lines=1 --expect=ctrl-e --tiebreak=index'}, a:000)
 endfunction
 
 function! s:search_history_sink(lines)
@@ -666,13 +666,13 @@ function! fzf#vim#search_history(...)
   return s:fzf('history-search', {
   \ 'source':  s:history_source('/'),
   \ 'sink*':   s:function('s:search_history_sink'),
-  \ 'options': '+m --ansi --prompt="Hist/> " --header-lines=1 --expect=ctrl-e --tiebreak=index'}, a:000)
+  \ 'options': '+m --ansi --prompt="Hist/❯ " --header-lines=1 --expect=ctrl-e --tiebreak=index'}, a:000)
 endfunction
 
 function! fzf#vim#history(...)
   return s:fzf('history-files', {
   \ 'source':  fzf#vim#_recent_files(),
-  \ 'options': ['-m', '--header-lines', !empty(expand('%')), '--prompt', 'Hist> ']
+  \ 'options': ['-m', '--header-lines', !empty(expand('%')), '--prompt', 'Hist❯ ']
   \}, a:000)
 endfunction
 
@@ -718,7 +718,7 @@ function! fzf#vim#gitfiles(args, ...)
     return s:fzf('gfiles', {
     \ 'source':  source,
     \ 'dir':     root,
-    \ 'options': '-m --read0 --prompt "GitFiles> "'
+    \ 'options': '-m --read0 --prompt "GitFiles❯ "'
     \}, a:000)
   endif
 
@@ -736,7 +736,7 @@ function! fzf#vim#gitfiles(args, ...)
   let wrapped = fzf#wrap({
   \ 'source':  prefix . '-c color.status=always status --short --untracked-files=all',
   \ 'dir':     root,
-  \ 'options': ['--ansi', '--multi', '--nth', '2..,..', '--tiebreak=index', '--prompt', 'GitFiles?> ', '--preview', preview]
+  \ 'options': ['--ansi', '--multi', '--nth', '2..,..', '--tiebreak=index', '--prompt', 'GitFiles?❯ ', '--preview', preview]
   \})
   call s:remove_layout(wrapped)
   let wrapped.common_sink = remove(wrapped, 'sink*')
@@ -826,7 +826,7 @@ function! fzf#vim#buffers(...)
   return s:fzf('buffers', {
   \ 'source':  map(sorted, 'fzf#vim#_format_buffer(v:val)'),
   \ 'sink*':   s:function('s:bufopen'),
-  \ 'options': ['+m', '-x', '--tiebreak=index', header_lines, '--ansi', '-d', '\t', '--with-nth', '3..', '-n', '2,1..2', '--prompt', 'Buf> ', '--query', query, '--preview-window', '+{2}-/2', '--tabstop', tabstop]
+  \ 'options': ['+m', '-x', '--tiebreak=index', header_lines, '--ansi', '-d', '\t', '--with-nth', '3..', '-n', '2,1..2', '--prompt', 'Buf❯ ', '--query', query, '--preview-window', '+{2}-/2', '--tabstop', tabstop]
   \}, args)
 endfunction
 
@@ -930,7 +930,7 @@ function! fzf#vim#grep(grep_command, ...)
   let name    = join(words, '-')
   let capname = join(map(words, 'toupper(v:val[0]).v:val[1:]'), '')
   let opts = {
-  \ 'options': ['--ansi', '--prompt', capname.'> ',
+  \ 'options': ['--ansi', '--prompt', capname.'❯ ',
   \             '--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
   \             '--delimiter', ':', '--preview-window', '+{2}-/2']
   \}
@@ -969,7 +969,7 @@ function! fzf#vim#grep2(command_prefix, query, ...)
   let fallback = s:is_win ? '' : ' || :'
   let opts = {
   \ 'source': s:is_win ? 'cd .' : ':',
-  \ 'options': ['--ansi', '--prompt', toupper(name).'> ', '--query', a:query,
+  \ 'options': ['--ansi', '--prompt', toupper(name).'❯ ', '--query', a:query,
   \             '--disabled',
   \             '--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
   \             '--delimiter', ':', '--preview-window', '+{2}-/2']
@@ -1049,7 +1049,7 @@ function! fzf#vim#buffer_tags(query, ...)
     return s:fzf('btags', {
     \ 'source':  s:btags_source(tag_cmds),
     \ 'sink*':   s:function('s:btags_sink'),
-    \ 'options': s:reverse_list(['-m', '-d', '\t', '--with-nth', '1,4..', '-n', '1', '--prompt', 'BTags> ', '--query', a:query, '--preview-window', '+{3}-/2'])}, args)
+    \ 'options': s:reverse_list(['-m', '-d', '\t', '--with-nth', '1,4..', '-n', '1', '--prompt', 'BTags❯ ', '--query', a:query, '--preview-window', '+{3}-/2'])}, args)
   catch
     return s:warn(v:exception)
   endtry
@@ -1153,7 +1153,7 @@ function! fzf#vim#tags(query, ...)
   return s:fzf('tags', {
   \ 'source':  join(['perl', fzf#shellescape(s:bin.tags), join(args)]),
   \ 'sink*':   s:function('s:tags_sink'),
-  \ 'options': extend(opts, ['--nth', '1..2', '-m', '-d', '\t', '--tiebreak=begin', '--prompt', 'Tags> ', '--query', a:query])}, a:000)
+  \ 'options': extend(opts, ['--nth', '1..2', '-m', '-d', '\t', '--tiebreak=begin', '--prompt', 'Tags❯ ', '--query', a:query])}, a:000)
 endfunction
 
 " ------------------------------------------------------------------
@@ -1244,7 +1244,7 @@ function! fzf#vim#commands(...)
   \ 'source':  extend(extend(list[0:0], map(list[1:], 's:format_cmd(v:val)')), s:excmds()),
   \ 'sink*':   s:function('s:command_sink'),
   \ 'options': '--ansi --expect '.s:conf('commands_expect', 'ctrl-x').
-  \            ' --tiebreak=index --header-lines 1 -x --prompt "Commands> " -n2,3,2..3 --tabstop=1 -d "\t"'}, a:000)
+  \            ' --tiebreak=index --header-lines 1 -x --prompt "Commands❯ " -n2,3,2..3 --tabstop=1 -d "\t"'}, a:000)
 endfunction
 
 " ------------------------------------------------------------------
@@ -1304,7 +1304,7 @@ function! fzf#vim#changes(...)
   return s:fzf('changes', {
   \ 'source':  all_changes,
   \ 'sink*':   s:function('s:changes_sink'),
-  \ 'options': printf('+m -x --ansi --tiebreak=index --header-lines=1 --cycle --scroll-off 999 --sync --bind start:pos:%d --prompt "Changes> "', cursor)}, a:000)
+  \ 'options': printf('+m -x --ansi --tiebreak=index --header-lines=1 --cycle --scroll-off 999 --sync --bind start:pos:%d --prompt "Changes❯ "', cursor)}, a:000)
 endfunction
 
 " ------------------------------------------------------------------
@@ -1330,7 +1330,7 @@ function! fzf#vim#marks(...)
   return s:fzf('marks', {
   \ 'source':  extend(list[0:0], map(list[1:], 's:format_mark(v:val)')),
   \ 'sink*':   s:function('s:mark_sink'),
-  \ 'options': '+m -x --ansi --tiebreak=index --header-lines 1 --tiebreak=begin --prompt "Marks> "'}, a:000)
+  \ 'options': '+m -x --ansi --tiebreak=index --header-lines 1 --tiebreak=begin --prompt "Marks❯ "'}, a:000)
 endfunction
 
 " ------------------------------------------------------------------
@@ -1367,7 +1367,7 @@ function! fzf#vim#jumps(...)
   return s:fzf('jumps', {
   \ 'source'  : extend(s:jumplist[0:0], map(s:jumplist[1:], 's:jump_format(v:val)')),
   \ 'sink*'   : s:function('s:jump_sink'),
-  \ 'options' : '+m -x --ansi --tiebreak=index --cycle --scroll-off 999 --sync --bind start:pos:'.current.' --tac --header-lines 1 --tiebreak=begin --prompt "Jumps> "',
+  \ 'options' : '+m -x --ansi --tiebreak=index --cycle --scroll-off 999 --sync --bind start:pos:'.current.' --tac --header-lines 1 --tiebreak=begin --prompt "Jumps❯ "',
   \ }, a:000)
 endfunction
 
@@ -1410,7 +1410,7 @@ function! fzf#vim#filetypes(...)
   \ 'source':  fzf#vim#_uniq(sort(map(split(globpath(&rtp, 'syntax/*.vim'), '\n'),
   \            'fnamemodify(v:val, ":t:r")'))),
   \ 'sink':    'setf',
-  \ 'options': '+m --prompt="File types> "'
+  \ 'options': '+m --prompt="File types❯ "'
   \}, a:000)
 endfunction
 
@@ -1535,7 +1535,7 @@ function! s:commits(range, buffer_local, args)
   \ 'source':  source,
   \ 'sink*':   s:function('s:commits_sink'),
   \ 'options': s:reverse_list(['--ansi', '--multi', '--tiebreak=index',
-  \   '--inline-info', '--prompt', command.'> ', '--bind=ctrl-s:toggle-sort',
+  \   '--inline-info', '--prompt', command.'❯ ', '--bind=ctrl-s:toggle-sort',
   \   '--header', ':: Press '.s:magenta('CTRL-S', 'Special').' to toggle sort, '.s:magenta('CTRL-Y', 'Special').' to yank commit hashes',
   \   '--expect=ctrl-y,'.expect_keys])
   \ }
@@ -1653,7 +1653,7 @@ function! fzf#vim#maps(mode, ...)
   return s:fzf('maps', {
   \ 'source':  colored,
   \ 'sink':    s:function('s:key_sink'),
-  \ 'options': '--prompt "Maps ('.a:mode.')> " --ansi --no-hscroll --nth 1,.. --color prompt:'.pcolor}, a:000)
+  \ 'options': '--prompt "Maps ('.a:mode.')❯ " --ansi --no-hscroll --nth 1,.. --color prompt:'.pcolor}, a:000)
 endfunction
 
 " ----------------------------------------------------------------------------
